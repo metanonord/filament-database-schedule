@@ -139,7 +139,8 @@ class ScheduleResource extends Resource
                         }),
                     Forms\Components\TextInput::make('custom_frequenza')
                         ->label('Descrizione frequenza')
-                        ->required(),
+                        ->required()
+                        ->readonly(),
                     Forms\Components\TagsInput::make('environments')
                         ->placeholder(null)
                         ->label(__('filament-database-schedule::schedule.fields.environments')),
