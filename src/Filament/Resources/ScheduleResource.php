@@ -89,7 +89,6 @@ class ScheduleResource extends Resource
                         ->required()
                         ->visible(fn ($get) => $get('command') === 'custom' && config('filament-database-schedule.commands.enable_custom')),
                     Forms\Components\TextInput::make('custom_descrizione')
-                        ->placeholder()
                         ->label('Descrizione')
                         ->required(),
                     Forms\Components\DatePicker::make('custom_data_attivazione')
