@@ -208,22 +208,22 @@ class ScheduleResource extends Resource
                             ->translatedFormat($format);
                     })->label(__('filament-database-schedule::schedule.fields.updated_at'))->searchable()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('custom_descrizione')
-                    ->label(__('filament-database-schedule::schedule.fields.custom_descrizione'))
+                    ->label('Descrizione')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('custom_data_attivazione')
-                    ->label(__('filament-database-schedule::schedule.fields.custom_data_attivazione'))
+                    ->label('Data Attivazione')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('custom_frequenza')
-                    ->label(__('filament-database-schedule::schedule.fields.custom_frequenza'))
+                    ->label('Frequenza')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('custom_creato_da')
-                    ->label(__('filament-database-schedule::schedule.fields.custom_creato_da'))
+                    ->label('Creato da')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
