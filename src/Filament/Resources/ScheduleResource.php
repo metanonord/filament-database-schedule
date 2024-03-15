@@ -92,11 +92,9 @@ class ScheduleResource extends Resource
                         ->label('Descrizione')
                         ->required(),
                     Forms\Components\DatePicker::make('custom_data_attivazione')
-                        ->placeholder()
                         ->label('Data Attivazione')
                         ->required(),
                     Forms\Components\TextInput::make('custom_frequenza')
-                        ->placeholder()
                         ->label('Descrizione frequenza')
                         ->required(),
                     Forms\Components\Select::make('custom_creato_da')
