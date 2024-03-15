@@ -25,6 +25,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\DatePicker;
 use App\Models\User;
+use Panlatent\CronExpressionDescriptor\ExpressionDescriptor as ExpressionDescriptor;
 
 class ScheduleResource extends Resource
 {
@@ -94,9 +95,6 @@ class ScheduleResource extends Resource
                     Forms\Components\DatePicker::make('custom_data_attivazione')
                         ->label('Data Attivazione')
                         ->required(),
-                    Forms\Components\TextInput::make('custom_frequenza')
-                        ->label('Descrizione frequenza')
-                        ->required(),
                     Forms\Components\Select::make('custom_creato_da')
                         ->label('Creato da')
                         ->options(User::all()->pluck('name', 'id'))
@@ -125,8 +123,23 @@ class ScheduleResource extends Resource
                     Forms\Components\TextInput::make('expression')
                         ->placeholder('* * * * *')
                         ->rules([new Corn()])
+                        ->reactive()
                         ->label(__('filament-database-schedule::schedule.fields.expression'))
-                        ->required()->helperText(fn () => config('filament-database-schedule.tool-help-cron-expression.enable') ? new HtmlString(" <a href='" . config('filament-database-schedule.tool-help-cron-expression.url') . "' target='_blank'>" . __('filament-database-schedule::schedule.messages.help-cron-expression') . " </a>") : null),
+                        ->required()->helperText(fn () => config('filament-database-schedule.tool-help-cron-expression.enable') ? new HtmlString(" <a href='" . config('filament-database-schedule.tool-help-cron-expression.url') . "' target='_blank'>" . __('filament-database-schedule::schedule.messages.help-cron-expression') . " </a>") : null)
+                        ->afterStateUpdated(function ($set, $state) {
+                            if (!empty($state)) {
+                                try {
+                                    $description = (new ExpressionDescriptor($state, 'it_IT'))->getDescription();
+                                    $set('custom_frequenza', $description);
+                                } catch (\Exception $e) {
+                                    // Gestisci l'eccezione se la stringa cron non è valida
+                                    $set('custom_descrizione', __('Invalid Cron Expression'));
+                                }
+                            }
+                        }),
+                    Forms\Components\TextInput::make('custom_frequenza')
+                        ->label('Descrizione frequenza')
+                        ->required(),
                     Forms\Components\TagsInput::make('environments')
                         ->placeholder(null)
                         ->label(__('filament-database-schedule::schedule.fields.environments')),
