@@ -181,10 +181,10 @@ class ScheduleResource extends Resource
                         return $record->command_custom;
                     return $record->command;
                 })->label(__('filament-database-schedule::schedule.fields.command'))->searchable()->sortable(),
-                ScheduleArguments::make('params')->label(__('filament-database-schedule::schedule.fields.arguments'))->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('options')->label(__('filament-database-schedule::schedule.fields.options'))->searchable()->sortable()->getStateUsing(fn (Model $record) => $record->getOptions())->separator(',')->badge(),
+                ScheduleArguments::make('params')->label(__('filament-database-schedule::schedule.fields.arguments'))->searchable()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('options')->label(__('filament-database-schedule::schedule.fields.options'))->searchable()->sortable()->getStateUsing(fn (Model $record) => $record->getOptions())->separator(',')->badge()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('expression')->label(__('filament-database-schedule::schedule.fields.expression'))->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('environments')->label(__('filament-database-schedule::schedule.fields.environments'))->separator(',')->searchable()->sortable()->badge()->toggleable(isToggledHiddenByDefault: false),
+                Tables\Columns\TextColumn::make('environments')->label(__('filament-database-schedule::schedule.fields.environments'))->separator(',')->searchable()->sortable()->badge()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status')
                     ->label(__('filament-database-schedule::schedule.fields.status'))
                     ->searchable()
@@ -211,6 +211,7 @@ class ScheduleResource extends Resource
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('custom_data_attivazione')
                     ->label('Data Attivazione')
+                    ->date()
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
