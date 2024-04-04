@@ -89,6 +89,15 @@ class ScheduleResource extends Resource
                         ->label(__('filament-database-schedule::schedule.messages.custom'))
                         ->required()
                         ->visible(fn ($get) => $get('command') === 'custom' && config('filament-database-schedule.commands.enable_custom')),
+                    Forms\Components\Select::make('custom_connection')
+                        ->label('Connessione')
+                        ->options([
+                            'core' => 'Core',
+                            'aux' => 'Aux',
+                            'mn' => 'MetanoNord',
+                            'ut' => 'Utilità',
+                        ])
+                        ->searchable(),
                     Forms\Components\TextInput::make('custom_descrizione')
                         ->label('Descrizione')
                         ->required(),
@@ -236,6 +245,11 @@ class ScheduleResource extends Resource
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('custom_creato_da')
                     ->label('Creato da')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('custom_connection')
+                    ->label('Connessione')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),

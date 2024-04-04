@@ -109,8 +109,16 @@ class ViewSchedule extends Page implements HasTable
                 Tables\Columns\IconColumn::make('session_id')
                     ->trueIcon('heroicon-o-arrow-top-right-on-square')
                     ->label('Session ID')
+                    ->visible(function ($record) {
+                        // Rendi visibile l'icona solo se il record ha un valore per 'session_id'
+                        return !empty($record->session_id);
+                    })
                     ->url(function ($record) {
-                        $baseRoute = route('filament.admin.resources.logs-processi-mn.index');
+                        if ($record->custom_connection === 'mn') {
+                            $baseRoute = route('filament.admin.resources.logs-processi-mn.index');
+                        } else {
+                            $baseRoute = route('filament.admin.resources.logs-processi-ut.index');
+                        }
                         $filterQueryString = http_build_query([
                             'tableFilters' => [
                                 'session_id' => [
