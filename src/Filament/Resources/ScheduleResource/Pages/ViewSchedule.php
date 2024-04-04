@@ -11,7 +11,7 @@ use Illuminate\Support\HtmlString;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Resources\Concerns\HasTabs;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables\Columns\ActionsColumn;
+use Filament\Tables\Columns\IconColumn;
 
 use Filament\Resources\Pages\Concerns\HasRelationManagers;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
@@ -106,14 +106,13 @@ class ViewSchedule extends Page implements HasTable
                     ->formatStateUsing(function ($state) {
                         return (count(explode("<br />", nl2br($state))) - 1) . " rows of output";
                     }),
-                Tables\Columns\ActionsColumn::make('actions')
-                    ->actions([
-                        Action::make('viewSession')
-                            ->label('View Session')
-                            ->url(fn ($record): string => route('filament.resources.sessions.index', ['session_id' => $record->session_id]))
-                            ->icon('heroicon-o-external-link'),
-                        // Altre azioni...
-                    ]),
+                Tables\Columns\IconColumn::make('session_id')
+                    ->trueIcon('heroicon-o-arrow-top-right-on-square')
+                    ->label('Session ID')
+                    ->url(fn ($record): string => route('filament.admin.resources.logs-processi-mn.index', ['session_id' => $record->session_id]))
+                    ->openUrlInNewTab()
+
+
             ]), Tables\Columns\Layout\Panel::make([
 
                 Tables\Columns\TextColumn::make('output')->extraAttributes(["class" => "!max-w-max"], true)
