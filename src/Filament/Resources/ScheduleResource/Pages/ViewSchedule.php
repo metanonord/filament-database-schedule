@@ -11,6 +11,7 @@ use Illuminate\Support\HtmlString;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Resources\Concerns\HasTabs;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\ActionsColumn;
 
 use Filament\Resources\Pages\Concerns\HasRelationManagers;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
@@ -51,7 +52,7 @@ class ViewSchedule extends Page implements HasTable
                 ->visible($this->record->histories->count())
                 ->color('danger')
                 ->icon('heroicon-m-trash')
-                ->action(function() {
+                ->action(function () {
                     $this->record->histories()->delete();
                 }),
         ];
@@ -94,9 +95,9 @@ class ViewSchedule extends Page implements HasTable
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label(__('filament-database-schedule::schedule.fields.expression'))
                     ->formatStateUsing(function ($state, $record) {
-                        if($state == $record->created_at){
+                        if ($state == $record->created_at) {
                             return "Processing...";
-                        }else{
+                        } else {
                             return $state->diffInSeconds($record->created_at) . " seconds";
                         }
                     }),
@@ -105,6 +106,14 @@ class ViewSchedule extends Page implements HasTable
                     ->formatStateUsing(function ($state) {
                         return (count(explode("<br />", nl2br($state))) - 1) . " rows of output";
                     }),
+                Tables\Columns\ActionsColumn::make('actions')
+                    ->actions([
+                        Action::make('viewSession')
+                            ->label('View Session')
+                            ->url(fn ($record): string => route('filament.resources.sessions.index', ['session_id' => $record->session_id]))
+                            ->icon('heroicon-o-external-link'),
+                        // Altre azioni...
+                    ]),
             ]), Tables\Columns\Layout\Panel::make([
 
                 Tables\Columns\TextColumn::make('output')->extraAttributes(["class" => "!max-w-max"], true)
