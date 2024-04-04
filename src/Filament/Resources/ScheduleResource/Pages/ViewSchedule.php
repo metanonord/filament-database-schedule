@@ -109,8 +109,17 @@ class ViewSchedule extends Page implements HasTable
                 Tables\Columns\IconColumn::make('session_id')
                     ->trueIcon('heroicon-o-arrow-top-right-on-square')
                     ->label('Session ID')
-                    ->url(fn ($record): string => route('filament.admin.resources.logs-processi-mn.index', ['session_id' => $record->session_id]))
-                    ->openUrlInNewTab()
+                    ->url(function ($record) {
+                        $baseRoute = route('filament.admin.resources.logs-processi-mn.index');
+                        $filterQueryString = http_build_query([
+                            'tableFilters' => [
+                                'session_id' => [
+                                    'session_id' => $record->session_id,
+                                ],
+                            ],
+                        ]);
+                        return "{$baseRoute}?{$filterQueryString}";
+                    })->openUrlInNewTab()
 
 
             ]), Tables\Columns\Layout\Panel::make([
