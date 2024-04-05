@@ -245,7 +245,7 @@ class ScheduleResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('user.name')
+                Tables\Columns\TextColumn::make('custom_creato_da')
                     ->label('Creato da')
                     ->searchable()
                     ->sortable()
