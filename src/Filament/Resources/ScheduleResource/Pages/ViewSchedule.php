@@ -22,6 +22,7 @@ use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource;
 
 class ViewSchedule extends Page implements HasTable
 {
+    protected ?string $maxContentWidth = "full";
 
     protected static string $resource = ScheduleResource::class;
     protected static string $view = 'filament-panels::resources.pages.list-records';
