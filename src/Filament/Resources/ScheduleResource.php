@@ -105,10 +105,10 @@ class ScheduleResource extends Resource
                     Forms\Components\DatePicker::make('custom_data_attivazione')
                         ->label('Data Attivazione')
                         ->required(),
-                    Forms\Components\Select::make('custom_creato_da')
+                    Forms\Components\TextInput::make('custom_creato_da')
                         ->label('Creato da')
-                        ->options(User::all()->pluck('name', 'id'))
-                        ->searchable(),
+                        ->default(auth()->user()->name) // Imposta il valore predefinito per il campo con il nome dell'utente loggato
+                        ->readonly(),
                     TableRepeater::make('params')->label(__('filament-database-schedule::schedule.fields.arguments'))
                         ->schema([
                             Forms\Components\TextInput::make('value')->label(fn ($get) => ucfirst($get('name')))->required(fn ($get) => $get('required')),
@@ -151,8 +151,9 @@ class ScheduleResource extends Resource
                         ->label('Descrizione frequenza')
                         ->required()
                         ->readonly(),
-                    Forms\Components\TagsInput::make('environments')
-                        ->placeholder(null)
+                    Forms\Components\TextInput::make('environments')
+                        ->readonly()
+                        ->default(config('app.env'))
                         ->label(__('filament-database-schedule::schedule.fields.environments')),
                     Forms\Components\TextInput::make('log_filename')
                         ->label(__('filament-database-schedule::schedule.fields.log_filename'))
@@ -200,6 +201,16 @@ class ScheduleResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('custom_descrizione')
+                    ->label('Descrizione')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('custom_frequenza')
+                    ->label('Frequenza')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('command')->getStateUsing(function ($record) {
                     if ($record->command == 'custom')
                         return $record->command_custom;
@@ -228,19 +239,9 @@ class ScheduleResource extends Resource
                             ->setTimezone($timezone ?? $column->getTimezone())
                             ->translatedFormat($format);
                     })->label(__('filament-database-schedule::schedule.fields.updated_at'))->searchable()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('custom_descrizione')
-                    ->label('Descrizione')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
                 Tables\Columns\TextColumn::make('custom_data_attivazione')
                     ->label('Data Attivazione')
                     ->date()
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
-                Tables\Columns\TextColumn::make('custom_frequenza')
-                    ->label('Frequenza')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
