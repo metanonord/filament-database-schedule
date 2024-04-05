@@ -134,18 +134,18 @@ class ScheduleResource extends Resource
                         ->rules([new Corn()])
                         ->reactive()
                         ->label(__('filament-database-schedule::schedule.fields.expression'))
-                        ->required()->helperText(fn () => config('filament-database-schedule.tool-help-cron-expression.enable') ? new HtmlString(" <a href='" . config('filament-database-schedule.tool-help-cron-expression.url') . "' target='_blank'>" . __('filament-database-schedule::schedule.messages.help-cron-expression') . " </a>") : null),
-                    // ->afterStateUpdated(function ($set, $state) {
-                    //     if (!empty($state)) {
-                    //         try {
-                    //             $description = (new ExpressionDescriptor($state, 'it_IT'))->getDescription();
-                    //             $set('custom_frequenza', $description);
-                    //         } catch (\Exception $e) {
-                    //             // Gestisci l'eccezione se la stringa cron non è valida
-                    //             $set('custom_descrizione', __('Invalid Cron Expression'));
-                    //         }
-                    //     }
-                    // }),
+                        ->required()->helperText(fn () => config('filament-database-schedule.tool-help-cron-expression.enable') ? new HtmlString(" <a href='" . config('filament-database-schedule.tool-help-cron-expression.url') . "' target='_blank'>" . __('filament-database-schedule::schedule.messages.help-cron-expression') . " </a>") : null)
+                        ->afterStateUpdated(function ($set, $state) {
+                            if (!empty($state)) {
+                                try {
+                                    $description = (new ExpressionDescriptor($state, 'it_IT'))->getDescription();
+                                    $set('custom_frequenza', $description);
+                                } catch (\Exception $e) {
+                                    // Gestisci l'eccezione se la stringa cron non è valida
+                                    $set('custom_frequenza', __('Invalid Cron Expression'));
+                                }
+                            }
+                        }),
                     Forms\Components\TextInput::make('custom_frequenza')
                         ->label('Descrizione frequenza')
                         ->required()
