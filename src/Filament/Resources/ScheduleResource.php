@@ -91,6 +91,7 @@ class ScheduleResource extends Resource
                         ->visible(fn ($get) => $get('command') === 'custom' && config('filament-database-schedule.commands.enable_custom')),
                     Forms\Components\Select::make('custom_connection')
                         ->label('Connessione')
+                        ->required()
                         ->options([
                             'core' => 'Core',
                             'aux' => 'Aux',
@@ -243,7 +244,7 @@ class ScheduleResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('custom_creato_da')
+                Tables\Columns\TextColumn::make('user.name')
                     ->label('Creato da')
                     ->searchable()
                     ->sortable()

@@ -2,9 +2,10 @@
 
 // config for HusamTariq/FilamentDatabaseSchedule
 
-use HusamTariq\FilamentDatabaseSchedule\Models\Schedule;
-use HusamTariq\FilamentDatabaseSchedule\Filament\Resources\ScheduleResource;
+use HusamTariq\FilamentDatabaseSchedule\Models\Schedule as VendorSchedule;
 use Illuminate\Support\Str;
+use App\Models\Schedule;
+use App\Models\ScheduleHistory;
 
 return [
     /**
@@ -18,10 +19,7 @@ return [
 
     'timezone' => env('FILAMENT_SCHEDULE_TIMEZONE', config('app.timezone')),
 
-    'resources' =>
-    [
-        ScheduleResource::class,
-    ],
+
 
     /**
      * Cache settings
@@ -100,9 +98,9 @@ return [
          * Alternatively, you can set the "show_supported_only" parameter to true to only allow commands
          * that are in the supported list.
          */
-        "show_supported_only" => false,
+        "show_supported_only" => true,
         "supported" => [
-            //ex."erp:*"
+            'optimize*',
         ],
     ],
 
