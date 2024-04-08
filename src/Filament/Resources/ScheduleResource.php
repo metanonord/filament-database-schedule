@@ -151,9 +151,8 @@ class ScheduleResource extends Resource
                         ->label('Descrizione frequenza')
                         ->required()
                         ->readonly(),
-                    Forms\Components\TextInput::make('environments')
-                        ->readonly()
-                        ->default(config('app.env'))
+                    Forms\Components\TagsInput::make('environments')
+                        ->placeholder(null)
                         ->label(__('filament-database-schedule::schedule.fields.environments')),
                     Forms\Components\TextInput::make('log_filename')
                         ->label(__('filament-database-schedule::schedule.fields.log_filename'))
@@ -219,9 +218,7 @@ class ScheduleResource extends Resource
                 ScheduleArguments::make('params')->label(__('filament-database-schedule::schedule.fields.arguments'))->searchable()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('options')->label(__('filament-database-schedule::schedule.fields.options'))->searchable()->sortable()->getStateUsing(fn (Model $record) => $record->getOptions())->separator(',')->badge()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('expression')->label(__('filament-database-schedule::schedule.fields.expression'))->searchable()->sortable(),
-                Forms\Components\TagsInput::make('environments')
-                    ->placeholder(null)
-                    ->label(__('filament-database-schedule::schedule.fields.environments')),
+                Tables\Columns\TextColumn::make('environments')->label(__('filament-database-schedule::schedule.fields.environments'))->separator(',')->searchable()->sortable()->badge()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status')
                     ->label(__('filament-database-schedule::schedule.fields.status'))
                     ->searchable()
