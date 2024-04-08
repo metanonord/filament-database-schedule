@@ -84,21 +84,47 @@ class ScheduleResource extends Resource
                             $set('params', static::$commands->firstWhere('name', $state)['arguments'] ?? []);
                             $set('options_with_value', static::$commands->firstWhere('name', $state)['options']["withValue"] ?? []);
                         }),
-                    Forms\Components\TextInput::make('command_custom')
-                        ->placeholder(__('filament-database-schedule::schedule.messages.custom-command-here'))
-                        ->label(__('filament-database-schedule::schedule.messages.custom'))
-                        ->required()
-                        ->visible(fn ($get) => $get('command') === 'custom' && config('filament-database-schedule.commands.enable_custom')),
+                    Forms\Components\Select::make('type_selection')
+                        ->label('Tipo')
+                        ->options([
+                            'function' => 'Function',
+                            'procedure' => 'Procedure',
+                            'package' => 'Package',
+                            'php_script' => 'PHP Script',
+                        ])
+                        ->reactive() // Importante per aggiornare dinamicamente altri campi basandosi sulla selezione
+                        ->dehydrated(false)
+                        ->required(),
                     Forms\Components\Select::make('custom_connection')
                         ->label('Connessione')
                         ->required()
                         ->options([
-                            'core' => 'Core',
-                            'aux' => 'Aux',
+                            'oracle' => 'Core',
+                            'oracleaux' => 'Aux',
                             'mn' => 'MetanoNord',
                             'ut' => 'Utilità',
                         ])
+                        ->reactive() // Rende il campo reattivo
                         ->searchable(),
+                    Forms\Components\TextInput::make('command_custom_nome')
+                        ->placeholder(__('Inserisci il nome della procedura'))
+                        ->label(__('Nome Procedura'))
+                        ->required()
+                        ->reactive()
+                        ->dehydrated(false)
+                        ->afterStateUpdated(function ($set, $state, $get) {
+                            $typeSelection = $get('type_selection');
+                            $customConnection = $get('custom_connection');
+                            // Costruisci il valore finale basato sugli input
+                            $commandCustomFinal = "php artisan route:call --uri=\"/{$typeSelection}/{$customConnection}/{$state}\"";
+                            $set('command_custom', $commandCustomFinal);
+                        })
+                        ->visible(fn ($get) => $get('command') === 'custom' && config('filament-database-schedule.commands.enable_custom')),
+                    Forms\Components\TextInput::make('command_custom')
+                        ->readOnly()
+                        ->reactive()
+                        ->label(__('Custom Command'))
+                        ->visible(fn ($get) => $get('command') === 'custom' && config('filament-database-schedule.commands.enable_custom')),
                     Forms\Components\TextInput::make('custom_descrizione')
                         ->label('Descrizione')
                         ->required(),
