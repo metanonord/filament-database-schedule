@@ -179,15 +179,20 @@ class ScheduleResource extends Resource
                         ->readonly(),
                     Forms\Components\TagsInput::make('environments')
                         ->placeholder(null)
+                        ->visible(false)
                         ->label(__('filament-database-schedule::schedule.fields.environments')),
                     Forms\Components\TextInput::make('log_filename')
                         ->label(__('filament-database-schedule::schedule.fields.log_filename'))
+                        ->visible(false)
                         ->helperText(__('filament-database-schedule::schedule.messages.help-log-filename')),
                     Forms\Components\TextInput::make('webhook_before')
+                        ->visible(false)
                         ->label(__('filament-database-schedule::schedule.fields.webhook_before')),
                     Forms\Components\TextInput::make('webhook_after')
+                        ->visible(false)
                         ->label(__('filament-database-schedule::schedule.fields.webhook_after')),
                     Forms\Components\TextInput::make('email_output')
+                        ->visible(false)
                         ->label(__('filament-database-schedule::schedule.fields.email_output')),
                     Forms\Components\Section::make('History')
                         ->label(__('filament-database-schedule::schedule.button.history'))
@@ -199,24 +204,29 @@ class ScheduleResource extends Resource
                                 ->label(__('filament-database-schedule::schedule.fields.log_error'))->default(true),
                             Forms\Components\Toggle::make('limit_history_count')
                                 ->label(__('filament-database-schedule::schedule.fields.limit_history_count'))
+                                ->visible(false)
                                 ->live(),
                             Forms\Components\TextInput::make('max_history_count')
                                 ->label('')
                                 ->numeric()
                                 ->default(10)
-                                ->visible(fn (Get $get): bool => $get('limit_history_count')),
+                                ->visible(false),
                         ]),
                     Forms\Components\Toggle::make('sendmail_success')
                         ->label(__('filament-database-schedule::schedule.fields.sendmail_success')),
                     Forms\Components\Toggle::make('sendmail_error')
                         ->label(__('filament-database-schedule::schedule.fields.sendmail_error')),
                     Forms\Components\Toggle::make('even_in_maintenance_mode')
+                        ->visible(false)
                         ->label(__('filament-database-schedule::schedule.fields.even_in_maintenance_mode')),
                     Forms\Components\Toggle::make('without_overlapping')
+                        ->visible(false)
                         ->label(__('filament-database-schedule::schedule.fields.without_overlapping')),
                     Forms\Components\Toggle::make('on_one_server')
+                        ->visible(false)
                         ->label(__('filament-database-schedule::schedule.fields.on_one_server')),
                     Forms\Components\Toggle::make('run_in_background')
+                        ->visible(false)
                         ->label(__('filament-database-schedule::schedule.fields.run_in_background')),
                 ])->inlineLabel(false)
             ]);
