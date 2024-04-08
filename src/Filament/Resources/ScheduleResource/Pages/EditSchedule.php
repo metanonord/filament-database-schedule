@@ -12,6 +12,9 @@ class EditSchedule extends EditRecord
 {
     protected static string $resource = ScheduleResource::class;
 
+    protected ?string $maxContentWidth = "full";
+
+
     protected function getActions(): array
     {
         return [
@@ -31,6 +34,4 @@ class EditSchedule extends EditRecord
     {
         return $this->getResource()::getUrl('index');
     }
-
-
 }

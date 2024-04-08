@@ -11,6 +11,9 @@ class ListSchedules extends ListRecords
 {
     protected static string $resource = ScheduleResource::class;
 
+    protected ?string $maxContentWidth = "full";
+
+
     protected function getActions(): array
     {
         return [
