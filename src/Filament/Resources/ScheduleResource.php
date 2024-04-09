@@ -84,13 +84,14 @@ class ScheduleResource extends Resource
                             $set('params', static::$commands->firstWhere('name', $state)['arguments'] ?? []);
                             $set('options_with_value', static::$commands->firstWhere('name', $state)['options']["withValue"] ?? []);
                         }),
-                    Forms\Components\Select::make('type_selection')
+                    Forms\Components\Select::make('custom_type_selection')
                         ->label('Tipo')
                         ->options([
                             'function' => 'Function',
                             'procedure' => 'Procedure',
                             'package' => 'Package',
-                            'php_script' => 'PHP Script',
+                            'php-script' => 'PHP Script',
+                            'bash-command' => 'Bash Command',
                         ])
                         ->reactive() // Importante per aggiornare dinamicamente altri campi basandosi sulla selezione
                         ->dehydrated(false)
@@ -105,18 +106,35 @@ class ScheduleResource extends Resource
                             'ut' => 'Utilità',
                         ])
                         ->reactive() // Rende il campo reattivo
+                        ->visible(fn ($get) => $get('custom_type_selection') === 'function' && $get('custom_type_selection') === 'procedure')
                         ->searchable(),
                     Forms\Components\TextInput::make('command_custom_nome')
-                        ->placeholder(__('Inserisci il nome della procedura'))
-                        ->label(__('Nome Procedura'))
+                        ->placeholder(__('Inserisci il nome dello script da eseguire'))
+                        ->label(__('Nome Script'))
                         ->required()
                         ->reactive()
+                        ->live(onBlur: true)
                         ->dehydrated(false)
                         ->afterStateUpdated(function ($set, $state, $get) {
-                            $typeSelection = $get('type_selection');
+                            $typeSelection = $get('custom_type_selection');
                             $customConnection = $get('custom_connection');
-                            // Costruisci il valore finale basato sugli input
-                            $commandCustomFinal = "php artisan route:call --uri=\"/{$typeSelection}/{$customConnection}/{$state}\"";
+                            // Inizializza la variabile commandCustomFinal
+                            $commandCustomFinal = "";
+
+                            // Utilizza uno switch per determinare la stringa in base a custom_type_selection
+                            switch ($typeSelection) {
+                                case 'php-script':
+                                    $commandCustomFinal = "php {$state}";
+                                    break;
+                                case 'bash-command':
+                                    $commandCustomFinal = "{$state}";
+                                    break;
+                                default:
+                                    $commandCustomFinal = "php artisan route:call --uri=\"/{$typeSelection}/{$customConnection}/{$state}\"";
+                                    break;
+                            }
+
+                            // Imposta il valore di command_custom con il risultato finale
                             $set('command_custom', $commandCustomFinal);
                         })
                         ->visible(fn ($get) => $get('command') === 'custom' && config('filament-database-schedule.commands.enable_custom')),
@@ -130,6 +148,7 @@ class ScheduleResource extends Resource
                         ->required(),
                     Forms\Components\DatePicker::make('custom_data_attivazione')
                         ->label('Data Attivazione')
+                        ->default(Carbon::now())
                         ->required(),
                     Forms\Components\TextInput::make('custom_creato_da')
                         ->label('Creato da')
