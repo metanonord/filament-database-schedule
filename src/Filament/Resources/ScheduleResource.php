@@ -120,7 +120,6 @@ class ScheduleResource extends Resource
                             $customConnection = $get('custom_connection');
                             // Inizializza la variabile commandCustomFinal
                             $commandCustomFinal = "";
-
                             // Utilizza uno switch per determinare la stringa in base a custom_type_selection
                             switch ($typeSelection) {
                                 case 'php-script':
