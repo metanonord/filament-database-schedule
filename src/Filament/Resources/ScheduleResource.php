@@ -107,14 +107,13 @@ class ScheduleResource extends Resource
                         ->reactive() // Rende il campo reattivo
                         ->visible(fn ($get) => $get('custom_type_selection') === 'function' && $get('custom_type_selection') === 'procedure')
                         ->searchable(),
-                    Forms\Components\TextInput::make('command_custom_nome')
+                    Forms\Components\TextInput::make('custom_script_name')
                         ->placeholder(__('Inserisci il nome dello script da eseguire'))
                         ->helperText(new HtmlString('in caso di <strong>PHP Script</strong> o <strong>Bash Command</strong> aggiungere il path completo. In caso di <strong>Procedure</strong> o <strong>Function</strong> può essere aggiunto il Package e/o parametri in query string. (Es. uri?param=value)'))
                         ->label(__('Nome Script'))
                         ->required()
                         ->reactive()
                         ->live(onBlur: true)
-                        ->dehydrated(false)
                         ->afterStateUpdated(function ($set, $state, $get) {
                             $typeSelection = $get('custom_type_selection');
                             $customConnection = $get('custom_connection');
