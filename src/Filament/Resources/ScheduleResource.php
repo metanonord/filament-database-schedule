@@ -94,7 +94,6 @@ class ScheduleResource extends Resource
                             'bash-command' => 'Bash Command',
                         ])
                         ->reactive() // Importante per aggiornare dinamicamente altri campi basandosi sulla selezione
-                        ->dehydrated(false)
                         ->required(),
                     Forms\Components\Select::make('custom_connection')
                         ->label('Connessione')
@@ -110,6 +109,7 @@ class ScheduleResource extends Resource
                         ->searchable(),
                     Forms\Components\TextInput::make('command_custom_nome')
                         ->placeholder(__('Inserisci il nome dello script da eseguire'))
+                        ->helperText(new HtmlString('in caso di <strong>PHP Script</strong> o <strong>Bash Command</strong> aggiungere il path completo. In caso di <strong>Procedure</strong> o <strong>Function</strong> può essere aggiunto il Package e/o parametri in query string. (Es. uri?param=value)'))
                         ->label(__('Nome Script'))
                         ->required()
                         ->reactive()
@@ -257,6 +257,11 @@ class ScheduleResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('custom_descrizione')
                     ->label('Descrizione')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('custom_type_selection')
+                    ->label('Tipo Comando')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
