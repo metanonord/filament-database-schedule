@@ -92,6 +92,7 @@ class ScheduleResource extends Resource
                             'package' => 'Package',
                             'php-script' => 'PHP Script',
                             'bash-command' => 'Bash Command',
+                            'route' => 'Scheduled function on Route'
                         ])
                         ->reactive() // Importante per aggiornare dinamicamente altri campi basandosi sulla selezione
                         ->required(),
@@ -109,7 +110,7 @@ class ScheduleResource extends Resource
                         ->searchable(),
                     Forms\Components\TextInput::make('custom_script_name')
                         ->placeholder(__('Inserisci il nome dello script da eseguire'))
-                        ->helperText(new HtmlString('in caso di <strong>PHP Script</strong> o <strong>Bash Command</strong> aggiungere il path completo. In caso di <strong>Procedure</strong> o <strong>Function</strong> può essere aggiunto il Package e/o parametri in query string. (Es. uri?param=value)'))
+                        ->helperText(new HtmlString('in caso di <strong>PHP Script</strong> o <strong>Bash Command</strong> aggiungere il path completo. In caso di <strong>Procedure</strong> o <strong>Function</strong> può essere aggiunto il Package e/o parametri in query string. (Es. uri?param=value). In caso di <strong>Route Function</strong> inserire solo lo slug.'))
                         ->label(__('Nome Script'))
                         ->required()
                         ->reactive()
@@ -126,6 +127,9 @@ class ScheduleResource extends Resource
                                     break;
                                 case 'bash-command':
                                     $commandCustomFinal = "{$state}";
+                                    break;
+                                case 'route':
+                                    $commandCustomFinal = "php artisan route:call --uri=\"/{$state}\"";
                                     break;
                                 default:
                                     $commandCustomFinal = "php artisan route:call --uri=\"/{$typeSelection}/{$customConnection}/{$state}\"";
