@@ -25,6 +25,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\DatePicker;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Panlatent\CronExpressionDescriptor\ExpressionDescriptor as ExpressionDescriptor;
 
 class ScheduleResource extends Resource
@@ -369,5 +370,10 @@ class ScheduleResource extends Resource
             'edit' => Pages\EditSchedule::route('/{record}/edit'),
             'view' => Pages\ViewSchedule::route('/{record}'),
         ];
+    }
+
+    public static function canAccess(): bool
+    {
+        return Auth::user()->is_admin == 1 || Auth::user()->can('view Schedule');
     }
 }
