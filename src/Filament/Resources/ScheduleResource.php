@@ -105,6 +105,7 @@ class ScheduleResource extends Resource
                             'oracleaux' => 'Aux',
                             'mn' => 'MetanoNord',
                             'ut' => 'Utilità',
+                            'bl_webapp' => 'BL Webapp',
                         ])
                         ->reactive() // Rende il campo reattivo
                         ->visible(fn ($get) => $get('custom_type_selection') === 'function' || $get('custom_type_selection') === 'procedure')
