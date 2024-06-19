@@ -89,7 +89,7 @@ class ScheduleResource extends Resource
                         ->label('Tipo')
                         ->options([
                             'function' => 'Function',
-                            'procedure' => 'Procedure',
+                            'stored-procedure' => 'Procedure',
                             'package' => 'Package',
                             'php-script' => 'PHP Script',
                             'bash-command' => 'Bash Command',
