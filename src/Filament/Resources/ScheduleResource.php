@@ -108,7 +108,7 @@ class ScheduleResource extends Resource
                             'bl_webapp' => 'BL Webapp',
                         ])
                         ->reactive() // Rende il campo reattivo
-                        ->visible(fn ($get) => $get('custom_type_selection') === 'function' || $get('custom_type_selection') === 'procedure')
+                        ->visible(fn ($get) => $get('custom_type_selection') === 'function' || $get('custom_type_selection') === 'stored-procedure')
                         ->searchable(),
                     Forms\Components\TextInput::make('custom_script_name')
                         ->placeholder(__('Inserisci il nome dello script da eseguire'))
