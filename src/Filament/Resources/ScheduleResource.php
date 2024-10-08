@@ -56,10 +56,7 @@ class ScheduleResource extends Resource
         return __('filament-database-schedule::schedule.resource.single');
     }
 
-    public static function getNavigationGroup(): ?string
-    {
-        return __('filament-database-schedule::schedule.resource.navigation');
-    }
+    protected static ?string $navigationGroup = 'Schedulazioni';
 
     public static function getSlug(): string
     {
