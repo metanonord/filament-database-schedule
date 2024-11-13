@@ -124,16 +124,22 @@ class Schedule
         }
     }
 
-    private function createLogFile($task, $event, $type = 'info')
-    {
-        if ($task->log_filename) {
-            $logChannel = Log::build([
-                'driver' => 'single',
-                'path' => storage_path('logs/' . $task->log_filename . '.log'),
-            ]);
-            Log::stack([$logChannel])->$type(file_get_contents($event->output));
+private function createLogFile($task, $event, $type = 'info')
+{
+    if ($task->log_filename) {
+        $logChannel = Log::build([
+            'driver' => 'single',
+            'path' => storage_path('logs/' . $task->log_filename . '.log'),
+        ]);
+        
+        $outputPath = $event->output;
+        if (file_exists($outputPath) && is_readable($outputPath)) {
+            Log::stack([$logChannel])->$type(file_get_contents($outputPath));
+        } else {
+            Log::stack([$logChannel])->$type('Log file not found or not readable: ' . $outputPath);
         }
     }
+}
 
     private function createHistoryEntry($task, $command) : ScheduleHistory
     {
