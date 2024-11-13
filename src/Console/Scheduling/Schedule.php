@@ -154,11 +154,20 @@ private function createLogFile($task, $event, $type = 'info')
     }
 
     private function updateHistoryEntry(ScheduleHistory $history, $event)
-    {
-        $history->update(
-            [
-                'output' => file_get_contents($event->output)
-            ]
-        );
+{
+    $outputPath = $event->output;
+
+    if (file_exists($outputPath) && is_readable($outputPath)) {
+        $outputContent = file_get_contents($outputPath);
+    } else {
+        // Qui puoi gestire il caso in cui il file non esista o non sia leggibile.
+        $outputContent = 'Log file not found or not readable: ' . $outputPath;
     }
+
+    $history->update(
+        [
+            'output' => $outputContent
+        ]
+    );
+}
 }
