@@ -51,7 +51,7 @@ class Schedule
             }
             $event->cron($task->expression);
 
-            //ensure output is being captured to write history
+            // ensure output is being captured to write history
             $event->storeOutput();
 
             if (!empty($task->environments)) {
@@ -92,7 +92,7 @@ class Schedule
                 $event->onOneServer();
             }
 
-            $event->before(function () use ($task, $command){
+            $event->before(function () use ($task, $command) {
                 $this->history = $this->createHistoryEntry($task, $command);
             });
 
@@ -114,8 +114,14 @@ class Schedule
                 }
             );
 
+            // Add file existence check before unlink
             $event->after(function () use ($event) {
-                unlink($event->output);
+                if (file_exists($event->output)) {
+                    Log::info('Deleting output file: ' . $event->output);
+                    unlink($event->output);
+                } else {
+                    Log::warning('Output file does not exist when attempting to delete: ' . $event->output);
+                }
             });
 
             unset($event);
@@ -124,22 +130,22 @@ class Schedule
         }
     }
 
-private function createLogFile($task, $event, $type = 'info')
-{
-    if ($task->log_filename) {
-        $logChannel = Log::build([
-            'driver' => 'single',
-            'path' => storage_path('logs/' . $task->log_filename . '.log'),
-        ]);
-        
-        $outputPath = $event->output;
-        if (file_exists($outputPath) && is_readable($outputPath)) {
-            Log::stack([$logChannel])->$type(file_get_contents($outputPath));
-        } else {
-            Log::stack([$logChannel])->$type('Log file not found or not readable: ' . $outputPath);
+    private function createLogFile($task, $event, $type = 'info')
+    {
+        if ($task->log_filename) {
+            $logChannel = Log::build([
+                'driver' => 'single',
+                'path' => storage_path('logs/' . $task->log_filename . '.log'),
+            ]);
+
+            $outputPath = $event->output;
+            if (file_exists($outputPath) && is_readable($outputPath)) {
+                Log::stack([$logChannel])->$type(file_get_contents($outputPath));
+            } else {
+                Log::stack([$logChannel])->$type('Log file not found or not readable: ' . $outputPath);
+            }
         }
     }
-}
 
     private function createHistoryEntry($task, $command) : ScheduleHistory
     {
@@ -154,20 +160,20 @@ private function createLogFile($task, $event, $type = 'info')
     }
 
     private function updateHistoryEntry(ScheduleHistory $history, $event)
-{
-    $outputPath = $event->output;
+    {
+        $outputPath = $event->output;
 
-    if (file_exists($outputPath) && is_readable($outputPath)) {
-        $outputContent = file_get_contents($outputPath);
-    } else {
-        // Qui puoi gestire il caso in cui il file non esista o non sia leggibile.
-        $outputContent = 'Log file not found or not readable: ' . $outputPath;
+        if (file_exists($outputPath) && is_readable($outputPath)) {
+            $outputContent = file_get_contents($outputPath);
+        } else {
+            // Handle case where file does not exist or is not readable
+            $outputContent = 'Log file not found or not readable: ' . $outputPath;
+        }
+
+        $history->update(
+            [
+                'output' => $outputContent
+            ]
+        );
     }
-
-    $history->update(
-        [
-            'output' => $outputContent
-        ]
-    );
-}
 }
