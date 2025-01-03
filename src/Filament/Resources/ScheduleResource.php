@@ -318,17 +318,19 @@ class ScheduleResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-               Tables\Columns\TextColumn::make('last_run')
+                Tables\Columns\TextColumn::make('last_run')
                     ->label('Ultimo Svolgimento')
                     ->getStateUsing(function ($record) {
-                        $lastHistory = $record->histories()->latest('created_at')->first();
-                        if ($lastHistory && is_object($lastHistory) && isset($lastHistory->created_at)) {
-                            return $lastHistory->created_at;
-                        }
-                        return null;
+                        $lastHistory = \DB::table('schedule_histories')
+                            ->where('schedule_id', $record->id)
+                            ->latest('created_at')
+                            ->value('created_at');
+                
+                        return $lastHistory ? \Carbon\Carbon::parse($lastHistory) : null;
                     })
                     ->dateTime()
                     ->sortable(),
+
             ])
            ->filters([
             Tables\Filters\TrashedFilter::make(),
