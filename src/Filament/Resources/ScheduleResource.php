@@ -338,8 +338,7 @@ class ScheduleResource extends Resource
                         }
                     })
                     ->dateTime()
-                    ->sortable();
-
+                    ->sortable(),
             ])
            ->filters([
             Tables\Filters\TrashedFilter::make(),
