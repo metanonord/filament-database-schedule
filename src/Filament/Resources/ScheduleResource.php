@@ -319,15 +319,15 @@ class ScheduleResource extends Resource
                     ->sortable()
                     ->toggleable(),
             ])
-           ->filters([
-            Tables\Filters\TrashedFilter::make(),
-            Tables\Filters\SelectFilter::make('status')
-                ->label('Stato')
-                ->options([
-                    Status::Active => 'Attivo',
-                    Status::Inactive => 'Inattivo',
-                ]),
-        ])
+              ->filters([
+                Tables\Filters\TrashedFilter::make(),
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('Stato')
+                    ->options([
+                        'active' => 'Attivo',
+                        'inactive' => 'Inattivo',
+                    ]),
+            ])
             ->actions([
                 ActionGroup::make([
                     Tables\Actions\EditAction::make()->hidden(fn ($record) => $record->trashed())->tooltip(__('filament-actions::edit.single.label')),
