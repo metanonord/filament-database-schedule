@@ -321,9 +321,15 @@ class ScheduleResource extends Resource
 
 
             ])
-            ->filters([
-                Tables\Filters\TrashedFilter::make()
-            ])
+           ->filters([
+            Tables\Filters\TrashedFilter::make(),
+            Tables\Filters\SelectFilter::make('status')
+                ->label('Stato')
+                ->options([
+                    Status::Active => 'Attivo',
+                    Status::Inactive => 'Inattivo',
+                ]),
+        ])
             ->actions([
                 ActionGroup::make([
                     Tables\Actions\EditAction::make()->hidden(fn ($record) => $record->trashed())->tooltip(__('filament-actions::edit.single.label')),
