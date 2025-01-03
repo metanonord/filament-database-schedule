@@ -322,7 +322,10 @@ class ScheduleResource extends Resource
                     ->label('Ultimo Svolgimento')
                     ->getStateUsing(function ($record) {
                         $lastHistory = $record->histories()->latest('created_at')->first();
-                        return $lastHistory ? $lastHistory->created_at : null;
+                        if ($lastHistory && is_object($lastHistory) && isset($lastHistory->created_at)) {
+                            return $lastHistory->created_at;
+                        }
+                        return null;
                     })
                     ->dateTime()
                     ->sortable(),
