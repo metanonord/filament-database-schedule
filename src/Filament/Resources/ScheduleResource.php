@@ -318,10 +318,11 @@ class ScheduleResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('last_run')
+               Tables\Columns\TextColumn::make('last_run')
                     ->label('Ultimo Svolgimento')
                     ->getStateUsing(function ($record) {
-                        return optional($record->histories()->latest('created_at')->first())->created_at;
+                        $lastHistory = $record->histories()->latest('created_at')->first();
+                        return $lastHistory ? $lastHistory->created_at : null;
                     })
                     ->dateTime()
                     ->sortable(),
