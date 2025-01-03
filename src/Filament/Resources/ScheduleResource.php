@@ -318,6 +318,7 @@ class ScheduleResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+            ])
            ->filters([
             Tables\Filters\TrashedFilter::make(),
             Tables\Filters\SelectFilter::make('status')
