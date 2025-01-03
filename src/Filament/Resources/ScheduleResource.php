@@ -321,15 +321,24 @@ class ScheduleResource extends Resource
                 Tables\Columns\TextColumn::make('last_run')
                     ->label('Ultimo Svolgimento')
                     ->getStateUsing(function ($record) {
-                        $lastHistory = \DB::table('schedule_histories')
-                            ->where('schedule_id', $record->id)
-                            ->latest('created_at')
-                            ->value('created_at');
+                        try {
+                            $lastHistory = \Illuminate\Support\Facades\DB::table('schedule_histories')
+                                ->select('created_at')
+                                ->where('schedule_id', $record->id)
+                                ->orderByDesc('created_at')
+                                ->first();
                 
-                        return $lastHistory ? \Carbon\Carbon::parse($lastHistory) : null;
+                            return $lastHistory ? \Carbon\Carbon::parse($lastHistory->created_at) : null;
+                        } catch (\Throwable $e) {
+                            \Log::error('Errore durante il recupero del last_run', [
+                                'record_id' => $record->id ?? null,
+                                'exception' => $e->getMessage(),
+                            ]);
+                            return null;
+                        }
                     })
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable();
 
             ])
            ->filters([
