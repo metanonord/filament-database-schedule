@@ -378,7 +378,7 @@ class ScheduleResource extends Resource
     }
 
     public static function canAccess(): bool
-    {
-        return Auth::user()->is_admin == 1 || Auth::user()->can('view Schedule');
-    }
+        {
+            return Auth::check() && (Auth::user()->is_admin == 1 || Auth::user()->can('view Schedule'));
+        }
 }
